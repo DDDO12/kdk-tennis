@@ -14,9 +14,9 @@ function stopCourtTimer(ci){
   ct.running=false;
   clearInterval(ct.interval);ct.interval=null;
   // 게임 시간 히스토리 저장
-  if(history.length){
-    if(!history[history.length-1].gameSeconds)history[history.length-1].gameSeconds=[];
-    history[history.length-1].gameSeconds[ci]=ct.sec;
+  if(roundHistory.length){
+    if(!roundHistory[roundHistory.length-1].gameSeconds)roundHistory[roundHistory.length-1].gameSeconds=[];
+    roundHistory[roundHistory.length-1].gameSeconds[ci]=ct.sec;
   }
   updateCourtTimerUI(ci);
   saveState();

@@ -15,7 +15,7 @@ function formatDate(s){
 function getSitoutCounts(){
   var c={};
   players.forEach(function(p){c[p.name]=0});
-  history.forEach(function(h){h.sitout.forEach(function(n){c[n]=(c[n]||0)+1})});
+  roundHistory.forEach(function(h){h.sitout.forEach(function(n){c[n]=(c[n]||0)+1})});
   return c;
 }
 
@@ -47,7 +47,7 @@ function computeStats(){
     map[p.name]={name:p.name,totalGames:0,totalWins:0,totalLosses:0,totalDraws:0,
       goalsFor:0,goalsAgainst:0,byDate:{}};
   });
-  history.forEach(function(h){
+  roundHistory.forEach(function(h){
     var scores=h.scores||[];var date=h.date||'날짜 없음';
     h.courts.forEach(function(court,ci){
       if(!court.all.length)return;
@@ -134,7 +134,7 @@ function generateRound(){
   // 코트별 타이머 초기화
   courtTimers=teams.map(function(){return{sec:0,running:false,interval:null}});
   roundNum++;
-  history.push({courts:teams,sitout:sitout,scores:currentScores.map(function(s){return{...s}}),date:todayStr(),gameSeconds:[]});
+  roundHistory.push({courts:teams,sitout:sitout,scores:currentScores.map(function(s){return{...s}}),date:todayStr(),gameSeconds:[]});
   window._slideIdx=0;
   renderCourts(teams,sitout);
   updateStats(active.length,sitout.length);

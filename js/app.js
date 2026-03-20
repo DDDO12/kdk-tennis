@@ -84,7 +84,7 @@ function confirmScore(){
   var b=Math.max(0,parseInt(document.getElementById('sm-score-b').value)||0);
   if(!currentScores[ci])currentScores[ci]={a:0,b:0};
   currentScores[ci]={a:a,b:b};
-  if(history.length)history[history.length-1].scores=currentScores.map(function(s){return{...s}});
+  if(roundHistory.length)roundHistory[roundHistory.length-1].scores=currentScores.map(function(s){return{...s}});
   closeScoreModal();
   refreshScoreDisplay(ci);
   renderHistory();
@@ -112,8 +112,8 @@ function refreshScoreDisplay(ci){
 
 // ── 공유 ─────────────────────────────────────────────────────
 function shareRound(){
-  if(!history.length){showToast('생성된 라운드가 없습니다');return}
-  var h=history[history.length-1];
+  if(!roundHistory.length){showToast('생성된 라운드가 없습니다');return}
+  var h=roundHistory[roundHistory.length-1];
   var icons=['1️⃣','2️⃣','3️⃣'];
   var lines=['🎾 팀쎄러데이','📅 '+formatDate(h.date)+'  |  🏸 Round '+roundNum,'─'.repeat(24)];
   h.courts.filter(function(t){return t.all.length>0}).forEach(function(t,ci){
@@ -188,7 +188,7 @@ function onPtClick(ci,team,pi){
     var temp=srcArr[src.pi];srcArr[src.pi]=dstArr[pi];dstArr[pi]=temp;
     currentTeams[src.ci].all=[...currentTeams[src.ci].teamA,...currentTeams[src.ci].teamB];
     if(src.ci!==ci)currentTeams[ci].all=[...currentTeams[ci].teamA,...currentTeams[ci].teamB];
-    if(history.length)history[history.length-1].courts=currentTeams;
+    if(roundHistory.length)roundHistory[roundHistory.length-1].courts=currentTeams;
     renderCourts(currentTeams,currentSitout);
     saveState();
     showToast('🔄 선수 교환 완료');
@@ -228,7 +228,7 @@ function setViewType(t){
 function resetAll(){
   if(!confirm('전체 리셋? 히스토리와 통계가 삭제됩니다.'))return;
   courtTimers.forEach(function(ct){if(ct.running){ct.running=false;clearInterval(ct.interval)}});
-  roundNum=0;history=[];currentScores=[];currentTeams=[];currentSitout=[];
+  roundNum=0;roundHistory=[];currentScores=[];currentTeams=[];currentSitout=[];
   lastPairs=new Set();sitoutLast=new Set();selectedSwap=null;courtTimers=[];
   window._histDateIdx=0;window._statsDateIdx=0;window._slideIdx=0;
   document.getElementById('courts-area').innerHTML=
@@ -275,8 +275,8 @@ window.onload=async function(){
   var vtBtn=document.getElementById('vt-'+viewType);
   if(vtBtn)vtBtn.classList.add('active');
   render();
-  if(history.length){
-    var last=history[history.length-1];
+  if(roundHistory.length){
+    var last=roundHistory[roundHistory.length-1];
     currentTeams=last.courts;currentSitout=last.sitout;
     renderCourts(last.courts,last.sitout);
     updateStats([...selected].length,last.sitout.length);

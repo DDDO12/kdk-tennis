@@ -200,18 +200,18 @@ function goSlide(i){
 // ── 히스토리 렌더 (날짜별 슬라이드) ──────────────────────────
 function renderHistory(){
   var el=document.getElementById('panel-history');
-  if(!history.length){
+  if(!roundHistory.length){
     el.innerHTML='<div style="text-align:center;color:rgba(255,255,255,.3);padding:40px 20px;font-size:.85rem">아직 기록이 없습니다</div>';
     var b=document.querySelector('#tab-history .badge');if(b)b.remove();
     return;
   }
   var badge=document.querySelector('#tab-history .badge');
   if(!badge){badge=document.createElement('span');badge.className='badge';document.getElementById('tab-history').appendChild(badge)}
-  badge.textContent=history.length;
+  badge.textContent=roundHistory.length;
 
   // 날짜별 그룹화
   var byDate={};
-  history.forEach(function(r,i){
+  roundHistory.forEach(function(r,i){
     var d=r.date||'미기록';
     if(!byDate[d])byDate[d]=[];
     byDate[d].push({round:r,idx:i});
@@ -277,7 +277,7 @@ function renderHistory(){
 
 function changeHistDate(dir){
   var byDate={};
-  history.forEach(function(r){var d=r.date||'미기록';if(!byDate[d])byDate[d]=[];byDate[d].push(r)});
+  roundHistory.forEach(function(r){var d=r.date||'미기록';if(!byDate[d])byDate[d]=[];byDate[d].push(r)});
   var dates=Object.keys(byDate).sort().reverse();
   var idx=(window._histDateIdx||0)-dir;
   if(idx<0)idx=0;
@@ -295,26 +295,26 @@ function toggleRound(rn){
 function renderStats(){
   var el=document.getElementById('panel-stats');
   var stats=computeStats();
-  if(!history.length){
+  if(!roundHistory.length){
     el.innerHTML='<div class="stats-empty"><span class="eicon"><iconify-icon icon="mdi:chart-bar"></iconify-icon></span><p>라운드를 진행하면 통계가 표시됩니다</p></div>';return;
   }
   var totalGamesAll=stats.reduce(function(s,p){return s+p.totalGames},0);
   var sitCounts=getSitoutCounts();
   var totalGameSec=0;
-  history.forEach(function(h){(h.gameSeconds||[]).forEach(function(s){if(s>0)totalGameSec+=s})});
+  roundHistory.forEach(function(h){(h.gameSeconds||[]).forEach(function(s){if(s>0)totalGameSec+=s})});
 
   // 날짜별 슬라이드 네비
   var byDate={};
-  history.forEach(function(r){var d=r.date||'미기록';if(!byDate[d])byDate[d]=[];byDate[d].push(r)});
+  roundHistory.forEach(function(r){var d=r.date||'미기록';if(!byDate[d])byDate[d]=[];byDate[d].push(r)});
   var dates=['전체'].concat(Object.keys(byDate).sort().reverse());
   var statsDateIdx=window._statsDateIdx||0;
   if(statsDateIdx>=dates.length)statsDateIdx=0;
   var selDate=dates[statsDateIdx];
 
   // 해당 날짜의 통계만 필터링
-  var filteredHistory=history;
+  var filteredHistory=roundHistory;
   if(statsDateIdx>0){
-    filteredHistory=history.filter(function(h){return(h.date||'미기록')===selDate});
+    filteredHistory=roundHistory.filter(function(h){return(h.date||'미기록')===selDate});
   }
 
   // 날짜 필터링된 통계 재계산
@@ -453,7 +453,7 @@ function computeStatsFromHistory(hist){
 
 function changeStatsDate(dir){
   var byDate={};
-  history.forEach(function(r){var d=r.date||'미기록';if(!byDate[d])byDate[d]=[];byDate[d].push(r)});
+  roundHistory.forEach(function(r){var d=r.date||'미기록';if(!byDate[d])byDate[d]=[];byDate[d].push(r)});
   var dates=['전체'].concat(Object.keys(byDate).sort().reverse());
   var idx=(window._statsDateIdx||0)-dir;
   if(idx<0)idx=0;

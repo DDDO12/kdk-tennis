@@ -16,7 +16,7 @@ var DEFAULT_MEMBERS=[
 ];
 
 // ── 상태 변수 ─────────────────────────────────────────────────
-var players=[], history=[];
+var players=[], roundHistory=[];
 var selected=new Set();
 var roundNum=0;
 var lastPairs=new Set(), sitoutLast=new Set(), currentScores=[], courtCount=3;
@@ -31,7 +31,7 @@ var viewType='card'; // 'card' | 'slide'
 // ── localStorage ─────────────────────────────────────────────
 function saveState(){
   try{localStorage.setItem('kdk-v3',JSON.stringify({
-    players,selected:[...selected],roundNum,history,
+    players,selected:[...selected],roundNum,history:roundHistory,
     currentScores,sitoutLast:[...sitoutLast],courtCount,
     courtTimersSaved:courtTimers.map(function(ct){return{sec:ct.sec}}),
     viewType:viewType
@@ -42,7 +42,7 @@ function loadState(){
     var raw=localStorage.getItem('kdk-v3');if(!raw)return false;
     var d=JSON.parse(raw);
     players=d.players||[];selected=new Set(d.selected||[]);
-    roundNum=d.roundNum||0;history=d.history||[];
+    roundNum=d.roundNum||0;roundHistory=d.history||[];
     currentScores=d.currentScores||[];sitoutLast=new Set(d.sitoutLast||[]);
     courtCount=d.courtCount||3;
     viewType=d.viewType||'card';
@@ -56,7 +56,7 @@ function loadState(){
 // ── JSON 백업 / 복원 ──────────────────────────────────────────
 function exportBackup(){
   var data={
-    players,selected:[...selected],roundNum,history,
+    players,selected:[...selected],roundNum,history:roundHistory,
     currentScores,sitoutLast:[...sitoutLast],courtCount,
     courtTimersSaved:courtTimers.map(function(ct){return{sec:ct.sec}}),
     exportedAt:new Date().toISOString(),version:'kdk-v3'
@@ -82,14 +82,14 @@ function importBackup(e){
       players=d.players||[];
       selected=new Set(d.selected||[]);
       roundNum=d.roundNum||0;
-      history=d.history||[];
+      roundHistory=d.history||[];
       currentScores=d.currentScores||[];
       sitoutLast=new Set(d.sitoutLast||[]);
       courtCount=d.courtCount||3;
       courtTimers=(d.courtTimersSaved||[]).map(function(ct){return{sec:ct.sec||0,running:false,interval:null}});
       saveState();updateCourtCountUI();render();renderHistory();
-      if(history.length){
-        var last=history[history.length-1];
+      if(roundHistory.length){
+        var last=roundHistory[roundHistory.length-1];
         currentTeams=last.courts;currentSitout=last.sitout;
         renderCourts(last.courts,last.sitout);
         updateStats([...selected].length,last.sitout.length);
