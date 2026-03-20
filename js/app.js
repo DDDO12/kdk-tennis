@@ -246,14 +246,15 @@ function resetAll(){
 async function checkKdkPending(){
   var maruUrl=(localStorage.getItem('kdk-maru-url')||'').replace(/\/$/,'');
   var url=maruUrl?maruUrl+'/api/kdk/pending':'/api/kdk/pending';
+  var hdrs={'ngrok-skip-browser-warning':'1'};
   try{
-    var r=await fetch(url);
+    var r=await fetch(url,{headers:hdrs});
     var d=await r.json();
     if(!d.ok||!d.pending||!d.players||!d.players.length)return false;
     players=d.players.map(function(p){return{name:p.name,rank:p.rank,age:p.age||0}});
     selected=new Set(players.map(function(p){return p.name}));
     saveState();render();
-    if(maruUrl){fetch(maruUrl+'/api/kdk/clear',{method:'POST'});}
+    if(maruUrl){fetch(maruUrl+'/api/kdk/clear',{method:'POST',headers:hdrs});}
     var ts=d.imported_at?new Date(d.imported_at).toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'}):'방금';
     var banner=document.createElement('div');
     banner.style.cssText='position:fixed;top:12px;left:50%;transform:translateX(-50%);background:#27ae60;color:#fff;padding:10px 20px;border-radius:8px;z-index:9999;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,.3)';
@@ -268,15 +269,16 @@ async function checkKdkPending(){
 function checkKdkPendingBtn(){
   var maruUrl=(localStorage.getItem('kdk-maru-url')||'').replace(/\/$/,'');
   if(!maruUrl){showToast('⚙️ 설정에서 마루 서버 주소를 먼저 입력해주세요');return;}
-  fetch(maruUrl+'/api/kdk/pending')
+  var h={'ngrok-skip-browser-warning':'1'};
+  fetch(maruUrl+'/api/kdk/pending',{headers:h})
     .then(function(r){return r.json()})
     .then(function(d){
       if(!d.ok||!d.pending){showToast('📭 대기 중인 명단 없음');return;}
       players=d.players.map(function(p){return{name:p.name,rank:p.rank,age:p.age||0}});
       selected=new Set(players.map(function(p){return p.name}));
       saveState();render();
-      fetch(maruUrl+'/api/kdk/clear',{method:'POST'});
-      showToast('✅ '+d.players.length+'명 명단 불러옴 ('+d.source_file+')');
+      fetch(maruUrl+'/api/kdk/clear',{method:'POST',headers:h});
+      showToast('✅ '+d.players.length+'명 명단 불러옴');
       switchTab&&switchTab('members');
     })
     .catch(function(){showToast('❌ 마루 서버 연결 실패');});
