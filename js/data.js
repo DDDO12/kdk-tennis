@@ -42,7 +42,7 @@ function loadState(){
     var raw=localStorage.getItem('kdk-v3');if(!raw)return false;
     var d=JSON.parse(raw);
     players=d.players||[];selected=new Set(d.selected||[]);
-    roundNum=d.roundNum||0;roundHistory=d.history||[];
+    roundNum=d.roundNum||0;roundHistory=Array.isArray(d.history)?d.history:[];
     currentScores=d.currentScores||[];sitoutLast=new Set(d.sitoutLast||[]);
     courtCount=d.courtCount||3;
     viewType=d.viewType||'card';
@@ -82,7 +82,7 @@ function importBackup(e){
       players=d.players||[];
       selected=new Set(d.selected||[]);
       roundNum=d.roundNum||0;
-      roundHistory=d.history||[];
+      roundHistory=Array.isArray(d.history)?d.history:[];
       currentScores=d.currentScores||[];
       sitoutLast=new Set(d.sitoutLast||[]);
       courtCount=d.courtCount||3;
