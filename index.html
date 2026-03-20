@@ -80,6 +80,13 @@
       <span>설정</span>
       <button onclick="closeSettings()" style="background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:1.2rem;padding:4px">✕</button>
     </div>
+    <!-- 마루 연동 섹션 -->
+    <div class="sp-section">
+      <div class="sp-label">🤖 마루 서버 연동</div>
+      <input type="url" id="maru-url-input" class="sp-input" placeholder="https://xxxx.ngrok.io"
+        value="" oninput="localStorage.setItem('kdk-maru-url',this.value)">
+      <button class="btn btn-glass sp-btn" style="margin-top:8px" onclick="checkKdkPendingBtn()">📥 명단 가져오기</button>
+    </div>
     <!-- 백업 섹션 -->
     <div class="sp-section">
       <div class="sp-label">💾 데이터 백업</div>

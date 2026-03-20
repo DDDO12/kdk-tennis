@@ -486,3 +486,10 @@ body{font-family:'Pretendard','Segoe UI',sans-serif;color:#fff;min-height:100vh;
 .date-nav-btn:active{transform:scale(.95)}
 .date-nav-btn:disabled{opacity:.3;cursor:default}
 .date-nav-label{font-size:.88rem;font-weight:900;color:var(--primary)}
+
+/* ════════════ 마루 서버 URL 입력 ════════════ */
+.sp-input{width:100%;padding:11px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.08);color:#fff;font-size:.82rem;font-family:inherit;
+  margin-bottom:4px;box-sizing:border-box}
+.sp-input:focus{outline:none;border-color:rgba(223,255,0,.5)}
+.sp-input::placeholder{color:rgba(255,255,255,.3)}
